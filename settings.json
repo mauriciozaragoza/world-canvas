@@ -11,10 +11,14 @@
 
   //The Type of the database. You can choose between dirty, postgres, sqlite and mysql
   //You shouldn't use "dirty" for for anything else than testing or development
-  "dbType" : "dirty",
+  "dbType" : "mongodb",
   //the database specific settings
   "dbSettings" : {
-     "filename" : "var/dirty.db"
+    "dbname" : "worldcanvas",
+    "host" : "localhost",
+    "port" : 27017,
+    "user" : "",
+    "password" : ""
   }
                  
   /* An Example of MySQL Configuration

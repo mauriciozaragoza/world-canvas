@@ -1,9 +1,9 @@
 {
-  "name": "etherdraw",
-  "description": "Collaborative drawing and sketching in real time",
+  "name": "world-canvas",
+  "private": "true",
   "repository" : { 
     "type" : "git",
-    "url" : "http://github.com/JohnMcLear/draw.git"
+    "url" : "https://github.com/mauriciozaragoza/world-canvas.git"
   },
   "version": "0.1.0",
   "engines": {
@@ -16,6 +16,7 @@
     "ueberDB": "~0.2.1",
     "canvas": "1.1.6",
     "paper": "0.9.20",
-    "jsonminify":"~0.2.3"
+    "jsonminify": "~0.2.3",
+    "mongodb": "1.4.x"
   }
 }
