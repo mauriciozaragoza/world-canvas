@@ -2,46 +2,86 @@
 <html>
     <head>
         <title>EtherDraw</title>
-        <link rel='stylesheet' href='/static/css/style.css'>
         <link rel='stylesheet' href='/static/css/farbtastic.css'>
-	<script>
-	  /*
-	  |@licstart  The following is the entire license notice for the
-	  JavaScript code in this page.|
+        <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
+        <link rel='stylesheet' href='/static/css/style.css'>
+    	<script>
+    	  /*
+    	  |@licstart  The following is the entire license notice for the
+    	  JavaScript code in this page.|
 
-	  Copyright 2011 Peter Martischka, Primary Technology.
+    	  Copyright 2011 Peter Martischka, Primary Technology.
 
-	  Licensed under the Apache License, Version 2.0 (the "License");
-	  you may not use this file except in compliance with the License.
-	  You may obtain a copy of the License at
+    	  Licensed under the Apache License, Version 2.0 (the "License");
+    	  you may not use this file except in compliance with the License.
+    	  You may obtain a copy of the License at
 
-	     http://www.apache.org/licenses/LICENSE-2.0
+    	     http://www.apache.org/licenses/LICENSE-2.0
 
-	  Unless required by applicable law or agreed to in writing, software
-	  distributed under the License is distributed on an "AS IS" BASIS,
-	  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	  See the License for the specific language governing permissions and
-	  limitations under the License.
+    	  Unless required by applicable law or agreed to in writing, software
+    	  distributed under the License is distributed on an "AS IS" BASIS,
+    	  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    	  See the License for the specific language governing permissions and
+    	  limitations under the License.
 
-	  |@licend  The above is the entire license notice
-	  for the JavaScript code in this page.|
-	  */
-	</script>
+    	  |@licend  The above is the entire license notice
+    	  for the JavaScript code in this page.|
+    	  */
+    	</script>
         <meta charset="utf-8"> 
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
         <link rel="shortcut icon" href="/static/img/favicon.ico">
-
         <script src='/socket.io/socket.io.js'></script>
         <script src='/static/js/lib/jquery.js'></script>
         <script src='/static/js/lib/jquery_browser.js'></script>
         <script src='/static/js/lib/paper.js'></script>
         <script src='/static/js/lib/webtoolkit.base64.js'></script>
         <script src='/static/js/lib/farbtastic.js'></script>
-	<script src='/static/js/lib/jquery.pep.min.js'></script>
+        <script src='/static/js/lib/jquery.pep.min.js'></script>
+        <script src="/static/js/lib/bootstrap.min.js"></script>
         <script src='/static/js/draw.js' type="text/paperscript" canvas="myCanvas"></script>
         <script>document.domain = document.domain;</script>
     </head>
     <body>
+
+        <header class="navbar navbar-inverse" style="margin-bottom:0px;">
+            <div class="container">
+
+                <!-- <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">World Canvas</a>     
+                </div> -->
+
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" rel="home" href="#" title="Buy Sell Rent Everyting">
+                        <img style="max-width:100px; margin-top: -7px;" src="/static/img/pencilnav.png">
+                          World Canvas
+                    </a>
+                </div>
+
+                <nav class="collapse navbar-collapse">          
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Options<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">History</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Zones</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
 
         <div id="editbar" class="toolbar">
             <div id="overlay">
@@ -54,19 +94,19 @@
                       <span class="buttonicon buttonicon-draw"></span>
                     </a>
                 </li>
-		<!-- pencil brush -->
+                <!-- pencil brush -->
                 <li class="acl-write" id="pencilTool" data-key="pencil">
                     <a class="grouped-middle" data-l10n-id="draw.toolbar.pencil.title">
                       <span class="buttonicon buttonicon-pencil"></span>
                     </a>
                 </li>
-		<!-- Select Tool -->
+                <!-- Select Tool -->
                 <li class="acl-write" id="selectTool" data-key="select">
                     <a class="grouped-middle" data-l10n-id="draw.toolbar.select.title">
                       <span class="buttonicon buttonicon-select"></span>
                     </a>
                 </li>
-		<!-- Upload -->
+                <!-- Upload -->
                <!--  <li class="acl-write" id="uploadImage" data-key="upload">
                     <a class="grouped-right" data-l10n-id="draw.toolbar.upload.title">
                       <span class="buttonicon buttonicon-upload"></span>
@@ -88,14 +128,13 @@
                         <span class="buttonicon buttonicon-import_export"></span>
                     </a>
                 </li> -->
-		<!-- share & embed -->
+                <!-- share & embed -->
                 <li data-key="embed">
                     <a id="embedlink" class="grouped-right" data-l10n-id="draw.toolbar.embed.title">
                         <span class="buttonicon buttonicon-embed"></span>
                     </a>
                 </li>
-
-		<!-- user stuff -->
+                <!-- user stuff -->
                 <li class="separator"></li>
                 <li id="usericon" data-key="showusers">
                     <a data-l10n-id="draw.toolbar.showusers.title">
@@ -103,7 +142,6 @@
                         <span id="online_count">1</span>
                     </a>
                 </li>
-                
             </ul>
         </div>
    
@@ -112,30 +150,31 @@
             <h1 data-l10n-id="draw.settings.padSettings"></h1>
             <div class="column">
                 <h2 data-l10n-id="draw.settings.ClearCanvas">Clear Canvas</h2>
-		<a>Warning - This will clear the canvas</a><button id="clearCanvas">Okay, Clear it!</button>
-	    </div>
+                <a>Warning - This will clear the canvas</a><button id="clearCanvas">Okay, Clear it!</button>
+            </div>
         </div>
-	<div id="embed" class="popup">
+
+        <div id="embed" class="popup">
             <h1 data-l10n-id="draw.share">Share & Embed</h1>
             <div id="linkcode">
                 <h2 data-l10n-id="draw.share.link">Share</h2>
                 <input id="linkinput" type="text" value="">
             </div>
-            <br>
+            <br/>
             <div id="embedcode">
                 <h2 data-l10n-id="draw.share.emebdcode">Embed</h2>
                 <input id="embedinput" type="text" value="">
-            </div>
-            
+            </div> 
         </div>
+
         <div id="settings" class="popup">
             <h1 data-l10n-id="draw.settings.padSettings">Settings</h1>
             <div class="column">
-
                 <h2 data-l10n-id="draw.settings.myView"></h2>
             </div>
         </div>
-	<div id="importexport" class="popup">
+        
+        <div id="importexport" class="popup">
             <h1 data-l10n-id="draw.importExport.import_export">Export</h1>
             <div class="column">
                 <h2 data-l10n-id="draw.importExport.export"></h2>
@@ -144,28 +183,26 @@
             </div>
         </div>
 
-
-
-    <div id="lostConnection" class="hidden">
-        <p>Lost connection to the server! Please refresh this page.</p>
-    </div>
-    <div id="loading" class="hidden" style="display:block;">
-        <p>Loading existing sketch...  Click and hold to access the colour wheel</p>
-    </div>
-
-    <input type="file" id="imageInput" accept="image/*" />
-    <div id="activeColorSwatch"></div>
-    <div id="canvasContainer">
-      <canvas id="myCanvas" resize="true"></canvas>
-      <div id="mycolorpicker">
-        <div id="colorpickerMover"></div>
-        <div id="colorpicker"></div>
-        <div id="opacity">
-          <div id="opacityLabel">Opacity</div>
-          <input type="range" min="0" max="255" value="200" id="opacityRangeVal">
+        <div id="lostConnection" class="hidden">
+            <p>Lost connection to the server! Please refresh this page.</p>
         </div>
-      </div>
+        <div id="loading" class="hidden" style="display:block;">
+            <p>Loading existing sketch...  Click and hold to access the colour wheel</p>
+        </div>
 
-    </div>
+        <input type="file" id="imageInput" accept="image/*" />
+        <div id="activeColorSwatch"></div>
+        <div id="canvasContainer">
+            <canvas id="myCanvas" resize="true"></canvas>
+            <div id="mycolorpicker">
+                <div id="colorpickerMover"></div>
+                <div id="colorpicker"></div>
+                <div id="opacity">
+                    <div id="opacityLabel">Opacity</div>
+                    <input type="range" min="0" max="255" value="200" id="opacityRangeVal">
+                </div>
+            </div>
+        </div>
+
     </body>
 </html>
