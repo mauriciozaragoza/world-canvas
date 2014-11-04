@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>World Canvas : Zones</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+        <link rel="shortcut icon" href="/static/img/favicon.ico">
+    </head>
+
+    <body>
+        <header class="navbar navbar-inverse" style="margin-bottom:0px;">
+            <div class="container">
+
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" rel="home" href="/" title="World Canvas : Draw">
+                        <img style="max-width:100px; margin-top: -7px;" src="/static/img/pencilnav.png">
+                          World Canvas
+                    </a>
+                </div>
+
+                <nav class="collapse navbar-collapse">          
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/map/">Rooms</a></li>
+                        <li><a href="#">History</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <div class="row">
+            <div class="col-md-12" style="text-align:center;">
+                <h2>World Zones</h2>
+            </div>
+        </div>
+        <center><div id="map"></div></center>
+    </body>
+
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+    <script src="/static/js/topojson.js"></script>
+    <script src="/static/js/lib/jquery.js"></script>
+    <script type="text/javascript">
+      
+    var width  = 940,
+        height = 550,
+        active;
+
+    var color = d3.scale.category10();
+
+    var projection = d3.geo.mercator()
+        .translate([470, 300])
+        .scale(150);
+
+    var path = d3.geo.path()
+        .projection(projection);
+
+    var svg = d3.select("#map").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("style", "background:#93D2F0;");
+
+    var g = svg.append("g");
+
+    function click(d) {
+        if (active === d) return reset();
+        g.selectAll(".active").classed("active", false);
+        d3.select(this).classed("active", active = d);
+
+        var b = path.bounds(d);
+        g.transition().duration(750).attr("transform",
+            "translate(" + projection.translate() + ")"
+            + "scale(" + .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height) + ")"
+            + "translate(" + -(b[1][0] + b[0][0]) / 2 + "," + -(b[1][1] + b[0][1]) / 2 + ")");
+    }
+
+    function reset() {
+        g.selectAll(".active").classed("active", active = false);
+        g.transition().duration(750).attr("transform", "");
+    }
+
+    var tooltip = d3.select("#map").append("div")
+        .attr("class", "tooltipMap");
+
+    queue()
+        .defer(d3.json, "/static/data/world-50m.json")
+        .defer(d3.tsv, "/static/data/world-country-names.tsv")
+        .await(ready);
+
+    function ready(error, world, names) {
+        var countries = topojson.object(world, world.objects.countries).geometries,
+            neighbors = topojson.neighbors(world, countries),
+            i = -1,
+            n = countries.length;
+
+        countries.forEach(function(d) { 
+            var tryit = names.filter(function(n) { return d.id == n.id; })[0];
+            if (typeof tryit === "undefined"){
+                d.name = "Undefined";
+            } else {
+                d.name = tryit.name; 
+            }
+        });
+
+        var country = g.selectAll(".country").data(countries);
+
+        country
+            .enter()
+              .insert("path")
+              .attr("class", "country")    
+                  .attr("title", function(d,i) { return d.name; })
+                  .attr("d", path)
+                  .on("click", click)
+                  .style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); });
+
+        country
+            .on("mouseover", function(d){
+                tooltip.text(d["name"]);
+                return tooltip.style("visibility", "visible");})
+            .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+            .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+    }
+    </script>
+</html>

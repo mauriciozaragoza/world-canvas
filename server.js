@@ -52,6 +52,11 @@ app.get('/d/*', function(req, res){
   res.sendfile(__dirname + '/src/static/html/draw.html');
 });
 
+// Map
+app.get('/map/*', function(req, res){
+  res.sendfile(__dirname + '/src/static/html/map.html');
+});
+
 // Front-end tests
 app.get('/tests/frontend/specs_list.js', function(req, res){
   tests.specsList(function(tests){
