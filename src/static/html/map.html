@@ -38,13 +38,27 @@
                 <h2>World Zones</h2>
             </div>
         </div>
+
+        <h4 style="text-align: center;"><a href="#" data-reveal-id="info" data-animation="fade">Estylo for distributors ></a></h4>
+
         <center><div id="map"></div></center>
+
+        <div id="info" class="reveal-modal">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 style="text-align:center; margin-top:5px; margin-bottom:0px;"><span id="countryName"></span> Zone</h4>
+                    <a class="close-reveal-modal" style="padding-right: 20px;">&#215;</a>
+                </div>
+            </div>
+        </div>
+
     </body>
 
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="http://d3js.org/queue.v1.min.js"></script>
     <script src="/static/js/topojson.js"></script>
     <script src="/static/js/lib/jquery.js"></script>
+    <script src="/static/js/reveal.js"></script>
     <script type="text/javascript">
       
     var width  = 940,
@@ -77,6 +91,10 @@
             "translate(" + projection.translate() + ")"
             + "scale(" + .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height) + ")"
             + "translate(" + -(b[1][0] + b[0][0]) / 2 + "," + -(b[1][1] + b[0][1]) / 2 + ")");
+
+        var modalLocation = $(this).attr('data-reveal-id');
+        $('#'+modalLocation).reveal($(this).data());
+        $('#countryName').text(d.name);
     }
 
     function reset() {
@@ -113,10 +131,12 @@
             .enter()
               .insert("path")
               .attr("class", "country")    
-                  .attr("title", function(d,i) { return d.name; })
-                  .attr("d", path)
-                  .on("click", click)
-                  .style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); });
+              .attr("title", function(d,i) { return d.name; })
+              .attr("d", path)
+              .attr("data-reveal-id", "info")
+              .attr("data-animation", "fade")
+              .on("click", click)
+              .style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); });
 
         country
             .on("mouseover", function(d){
