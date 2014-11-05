@@ -91,6 +91,8 @@ io.sockets.on('connection', function (socket) {
   // EVENT: User stops drawing something
   // Having room as a parameter is not good for secure rooms
   socket.on('draw:progress', function (room, uid, co_ordinates) {
+    console.log(room, uid, co_ordinates);
+    
     if (!projects.projects[room] || !projects.projects[room].project) {
       loadError(socket);
       return;
