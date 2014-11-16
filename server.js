@@ -83,6 +83,7 @@ io.sockets.setMaxListeners(0);
 
 // SOCKET IO
 io.sockets.on('connection', function (socket) {
+  console.log(socket.request.connection.remoteAddress);
   socket.on('disconnect', function () {
     console.log("Socket disconnected");
     // TODO: We should have logic here to remove a drawing from memory as we did previously
@@ -91,7 +92,7 @@ io.sockets.on('connection', function (socket) {
   // EVENT: User stops drawing something
   // Having room as a parameter is not good for secure rooms
   socket.on('draw:progress', function (room, uid, co_ordinates) {
-    console.log(room, uid, co_ordinates);
+    // console.log(room, uid, co_ordinates);
     
     if (!projects.projects[room] || !projects.projects[room].project) {
       loadError(socket);

@@ -25,33 +25,33 @@ $(document).ready(function() {
   $('#linkinput').val(drawurl); // and the share/link input
   $('#drawTool > a').css({background:"#eee"}); // set the drawtool css to show it as active
 
-  $('#myCanvas').bind('mousewheel', function(ev){
-    scrolled(ev.pageX, ev.pageY, -ev.wheelDelta);
+  $('#myCanvas').on('mousewheel', function(ev){
+    scrolled(ev.pageX, ev.pageY, ev.deltaY * ev.deltaFactor);
   });
 
-  $('#myCanvas').bind('DOMMouseScroll', function(ev){
-    scrolled(ev.pageX, ev.pageY, ev.detail);
-  });
+  // $('#myCanvas').bind('DOMMouseScroll', function(ev, delta){
+  //   scrolled(ev.pageX, ev.pageY, ev.detail);
+  // });
 
 
 });
 
 var scaleFactor = 1.1;
 function scrolled(x, y, delta) {
-  // Far too buggy for now
-  /*
   console.log("Scrolling");
+  
   var pt = new Point(x, y),
-  scale = 1;
+    scale = 1;
+
   if(delta < 0) {
     scale *= scaleFactor;
   } else if(delta > 0) {
     scale /= scaleFactor;
   }
-  //view.scale(scale, pt);
-  $('#myCanvas').
+  
+  view.zoom *= scale;
+  
   view.draw();
-  */
 }
 
 
