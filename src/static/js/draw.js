@@ -38,8 +38,6 @@ $(document).ready(function() {
 
 var scaleFactor = 1.1;
 function scrolled(x, y, delta) {
-  console.log("Scrolling");
-  
   var pt = new Point(x, y),
     scale = 1;
 
@@ -145,11 +143,16 @@ var mouseTimer = 0; // used for getting if the mouse is being held down but not 
 var mouseHeld; // global timer for if mouse is held.
 
 function onMouseDown(event) {
-  if(event.which === 2) return; // If it's middle mouse button do nothing -- This will be reserved for panning in the future.
+  if(event.which === 2) {
+    // panning
+    return;
+  }
+
   $('.popup').fadeOut();
 
   // Ignore middle or right mouse button clicks for now
   if (event.event.button == 1 || event.event.button == 2) {
+    
     return;
   }
 
@@ -206,25 +209,30 @@ var send_item_move_timer;
 var item_move_timer_is_active = false;
 
 function onMouseDrag(event) {
-
   mouseTimer = 0;
   clearInterval(mouseHeld);
 
-  // Ignore middle or right mouse button clicks for now
-  if (event.event.button == 1 || event.event.button == 2) {
+  if (event.event.button == 1) {
+    view.center -= event.delta;
+    return;
+  } else if (event.event.button == 2) {
+    // right button
     return;
   }
 
+  var step = event.delta / 2;
+  step.angle += 90;
+
   if (activeTool == "draw" || activeTool == "pencil") {
-    var step = event.delta / 2;
-    step.angle += 90;
     if(activeTool == "draw"){
       var top = event.middlePoint + step;
       var bottom = event.middlePoint - step;
-    }else if (activeTool == "pencil"){
+    } 
+    else if (activeTool == "pencil") {
       var top = event.middlePoint;
       bottom = event.middlePoint;
     }
+
     path.add(top);
     path.insert(0, bottom);
     path.smooth();
@@ -236,16 +244,12 @@ function onMouseDrag(event) {
       bottom: bottom
     });
 
-    // Send paths every 100ms
+    // Send paths every second
     if (!timer_is_active) {
-
       send_paths_timer = setInterval(function () {
-
         socket.emit('draw:progress', room, uid, JSON.stringify(path_to_send));
         path_to_send.path = new Array();
-
-      }, 100);
-
+      }, 1000);
     }
 
     timer_is_active = true;
