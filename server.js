@@ -83,7 +83,7 @@ io.sockets.setMaxListeners(0);
 
 // SOCKET IO
 io.sockets.on('connection', function (socket) {
-  console.log(socket.request.connection.remoteAddress);
+  // console.log(socket.request.connection.remoteAddress);
   socket.on('disconnect', function () {
     console.log("Socket disconnected");
     // TODO: We should have logic here to remove a drawing from memory as we did previously

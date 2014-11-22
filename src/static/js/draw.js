@@ -1,6 +1,11 @@
 tool.minDistance = 10;
 tool.maxDistance = 45;
 
+timers = {
+  move: 500,
+  path: 1000
+};
+
 function pickColor(color) {
   $('#color').val(color);
   var rgb = hexToRgb(color);
@@ -220,6 +225,7 @@ function onMouseDrag(event) {
     return;
   }
 
+  // defines the width of the brush stroke
   var step = event.delta / 2;
   step.angle += 90;
 
@@ -249,7 +255,7 @@ function onMouseDrag(event) {
       send_paths_timer = setInterval(function () {
         socket.emit('draw:progress', room, uid, JSON.stringify(path_to_send));
         path_to_send.path = new Array();
-      }, 1000);
+      }, timers.path);
     }
 
     timer_is_active = true;
@@ -281,7 +287,7 @@ function onMouseDrag(event) {
           socket.emit('item:move:progress', room, uid, itemNames, item_move_delta);
           item_move_delta = null;
         }
-      }, 50);
+      }, timers.move);
     }
     item_move_timer_is_active = true;
   }
@@ -379,7 +385,7 @@ function onKeyDown(event) {
           socket.emit('item:move:progress', room, uid, itemNames, key_move_delta);
           key_move_delta = null;
         }
-      }, 100);
+      }, timers.move);
     }
     key_move_timer_is_active = true;
   }
@@ -421,8 +427,6 @@ function onKeyUp(event) {
   }
 }
 
-
-
 function moveItemsBy1Pixel(point) {
   if (!point) {
     return;
@@ -449,19 +453,21 @@ $('#myCanvas').bind('dragover dragenter', function(e) {
   e.preventDefault();
 });
 
-$('#myCanvas').bind('drop', function(e) {
-  e = e || window.event; // get window.event if e argument missing (in IE)
-  if (e.preventDefault) {  // stops the browser from redirecting off to the image.
-    e.preventDefault();
-  }
-  e = e.originalEvent;
-  var dt = e.dataTransfer;
-  var files = dt.files;
-  for (var i=0; i<files.length; i++) {
-    var file = files[i];
-    uploadImage(file);
-  }
-});
+// Removed drag&drop feature
+
+// $('#myCanvas').bind('drop', function(e) {
+//   e = e || window.event; // get window.event if e argument missing (in IE)
+//   if (e.preventDefault) {  // stops the browser from redirecting off to the image.
+//     e.preventDefault();
+//   }
+//   e = e.originalEvent;
+//   var dt = e.dataTransfer;
+//   var files = dt.files;
+//   for (var i=0; i<files.length; i++) {
+//     var file = files[i];
+//     uploadImage(file);
+//   }
+// });
 
 
 
@@ -604,7 +610,6 @@ function exportPNG() {
     window.winpng.document.write(html);
     window.winpng.document.body.style.margin = 0;
   }
-  
 }
 
 // User selects an image from the file browser to upload
@@ -617,21 +622,21 @@ $('#imageInput').bind('change', function(e) {
   }
 });
 
-function uploadImage(file) {
-  var reader = new FileReader();
+// function uploadImage(file) {
+//   var reader = new FileReader();
 
-  //attach event handler
-  reader.readAsDataURL(file);
-  $(reader).bind('loadend', function(e) {
-    var bin = this.result; 
+//   //attach event handler
+//   reader.readAsDataURL(file);
+//   $(reader).bind('loadend', function(e) {
+//     var bin = this.result; 
 
-    //Add to paper project here
-    var raster = new Raster(bin);
-    raster.position = view.center;
-    raster.name = uid + ":" + (++paper_object_count);
-    socket.emit('image:add', room, uid, JSON.stringify(bin), raster.position, raster.name);
-  });
-}
+//     //Add to paper project here
+//     var raster = new Raster(bin);
+//     raster.position = view.center;
+//     raster.name = uid + ":" + (++paper_object_count);
+//     socket.emit('image:add', room, uid, JSON.stringify(bin), raster.position, raster.name);
+//   });
+// }
 
 
 
@@ -723,15 +728,15 @@ socket.on('item:move', function(artist, itemNames, delta) {
   }
 });
 
-socket.on('image:add', function(artist, data, position, name) {
-  if (artist != uid) {
-    var image = JSON.parse(data);
-    var raster = new Raster(image);
-    raster.position = new Point(position[1], position[2]);
-    raster.name = name;
-    view.draw();
-  }
-});
+// socket.on('image:add', function(artist, data, position, name) {
+//   if (artist != uid) {
+//     var image = JSON.parse(data);
+//     var raster = new Raster(image);
+//     raster.position = new Point(position[1], position[2]);
+//     raster.name = name;
+//     view.draw();
+//   }
+// });
 
 
 // --------------------------------- 
