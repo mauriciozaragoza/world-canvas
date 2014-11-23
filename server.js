@@ -54,7 +54,12 @@ app.get('/d/*', function(req, res){
 
 // Get image
 app.get('/image/:id', function(req, res){
-  res.send(draw.getDrawing(req.params.id));
+  draw.getDrawing(req.params.id, function (project) {
+    res.send(project.exportSVG({
+      asString: true,
+      matchShapes: true
+    }));
+  });
 });
 
 // Map

@@ -1,6 +1,10 @@
 tool.minDistance = 10;
 tool.maxDistance = 45;
 
+var scaleFactor = 1.1,
+  maxZoom = 25,
+  minZoom = 0.05;
+
 timers = {
   move: 500,
   path: 1000
@@ -41,14 +45,14 @@ $(document).ready(function() {
 
 });
 
-var scaleFactor = 1.1;
 function scrolled(x, y, delta) {
   var pt = new Point(x, y),
     scale = 1;
 
-  if(delta < 0) {
+  if (delta < 0 && view.zoom < maxZoom) {
     scale *= scaleFactor;
-  } else if(delta > 0) {
+  } 
+  else if (delta > 0 && view.zoom > minZoom) {
     scale /= scaleFactor;
   }
   
@@ -56,7 +60,6 @@ function scrolled(x, y, delta) {
   
   view.draw();
 }
-
 
 $('#activeColorSwatch').css('background-color', $('.colorSwatch.active').css('background-color'));
 
@@ -452,27 +455,6 @@ function moveItemsBy1Pixel(point) {
 $('#myCanvas').bind('dragover dragenter', function(e) {
   e.preventDefault();
 });
-
-// Removed drag&drop feature
-
-// $('#myCanvas').bind('drop', function(e) {
-//   e = e || window.event; // get window.event if e argument missing (in IE)
-//   if (e.preventDefault) {  // stops the browser from redirecting off to the image.
-//     e.preventDefault();
-//   }
-//   e = e.originalEvent;
-//   var dt = e.dataTransfer;
-//   var files = dt.files;
-//   for (var i=0; i<files.length; i++) {
-//     var file = files[i];
-//     uploadImage(file);
-//   }
-// });
-
-
-
-
-
 
 // --------------------------------- 
 // CONTROLS EVENTS

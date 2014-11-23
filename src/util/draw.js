@@ -5,7 +5,7 @@ var db = require('./db.js');
 projects = projects.projects;
 
 // Create an in memory paper canvas
-var drawing = paper.setup(new paper.Canvas(1920, 1080));
+var drawing = paper.setup(new paper.Canvas(10000, 10000));
 
 // Continues to draw a path in real time
 exports.progressExternalPath = function (room, points, artist) {
@@ -125,13 +125,17 @@ exports.moveItemsEnd = function (room, artist, itemNames, delta) {
   }
 }
 
-exports.getDrawing = function (room) {
-  console.log(room, projects);
-  var project = projects[room].project;
-  project.activate();
+exports.getDrawing = function (room, onLoaded) {
+  var project = projects[room];
 
-  return project.exportSVG({
-    asString: true,
-    matchShapes: true
-  });
+  if (!project) {
+    projects[room] = {};
+    projects[room].project = new paper.Project();
+    projects[room].external_paths = {};
+
+    db.loadSingle(room, onLoaded);
+  }
+  else {
+    onLoaded(project.project);
+  }
 }
