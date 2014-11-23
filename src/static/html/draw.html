@@ -5,31 +5,10 @@
         <link rel='stylesheet' href='/static/css/farbtastic.css'>
         <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
         <link rel='stylesheet' href='/static/css/style.css'>
-    	<script>
-    	  /*
-    	  |@licstart  The following is the entire license notice for the
-    	  JavaScript code in this page.|
 
-    	  Copyright 2011 Peter Martischka, Primary Technology.
-
-    	  Licensed under the Apache License, Version 2.0 (the "License");
-    	  you may not use this file except in compliance with the License.
-    	  You may obtain a copy of the License at
-
-    	     http://www.apache.org/licenses/LICENSE-2.0
-
-    	  Unless required by applicable law or agreed to in writing, software
-    	  distributed under the License is distributed on an "AS IS" BASIS,
-    	  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    	  See the License for the specific language governing permissions and
-    	  limitations under the License.
-
-    	  |@licend  The above is the entire license notice
-    	  for the JavaScript code in this page.|
-    	  */
-    	</script>
         <meta charset="utf-8"> 
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+
         <link rel="shortcut icon" href="/static/img/favicon.ico">
         <script src='/socket.io/socket.io.js'></script>
         <script src='/static/js/lib/jquery.js'></script>
@@ -63,7 +42,7 @@
                 <nav class="collapse navbar-collapse">          
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="/map/">Rooms</a></li>
-                        <li><a href="/history/">History</a></li>
+                        <li><a href="#">History</a></li>
                     </ul>
                 </nav>
             </div>
@@ -92,12 +71,6 @@
                       <span class="buttonicon buttonicon-select"></span>
                     </a>
                 </li>
-                <!-- Upload -->
-               <!--  <li class="acl-write" id="uploadImage" data-key="upload">
-                    <a class="grouped-right" data-l10n-id="draw.toolbar.upload.title">
-                      <span class="buttonicon buttonicon-upload"></span>
-                    </a>
-                </li> -->
             </ul>
             <ul class="menu_right">
 
@@ -175,20 +148,23 @@
         <div id="loading" class="hidden" style="display:block;">
             <p>Loading existing sketch...  Click and hold to access the colour wheel</p>
         </div>
-
-        <input type="file" id="imageInput" accept="image/*" />
-        <div id="activeColorSwatch"></div>
-        <div id="canvasContainer">
-            <canvas id="myCanvas" resize="true"></canvas>
-            <div id="mycolorpicker">
-                <div id="colorpickerMover"></div>
-                <div id="colorpicker"></div>
-                <div id="opacity">
-                    <div id="opacityLabel">Opacity</div>
-                    <input type="range" min="0" max="255" value="200" id="opacityRangeVal">
+        <div class="row">
+            <div class="col-md-2">
+                <div id="mycolorpicker">
+                    <div id="colorpickerMover"></div>
+                    <div id="colorpicker"></div>
+                    <div id="opacity">
+                        <div id="opacityLabel">Opacity</div>
+                        <input type="range" min="0" max="255" value="200" id="opacityRangeVal">
+                    </div>
                 </div>
+            </div>
+
+            <div id="canvasContainer" class="col-md-10">
+                <canvas id="myCanvas" resize="true"></canvas>
             </div>
         </div>
 
+        <div id="activeColorSwatch"></div>
     </body>
 </html>

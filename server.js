@@ -52,6 +52,11 @@ app.get('/d/*', function(req, res){
   res.sendfile(__dirname + '/src/static/html/draw.html');
 });
 
+// Get image
+app.get('/dimage/:id', function(req, res){
+  res.send(draw.getDrawing(req.params.id));
+});
+
 // Map
 app.get('/map/*', function(req, res){
   res.sendfile(__dirname + '/src/static/html/map.html');
@@ -60,18 +65,6 @@ app.get('/map/*', function(req, res){
 // Map
 app.get('/history/*', function(req, res){
   res.sendfile(__dirname + '/src/static/html/history.html');
-});
-
-// Front-end tests
-app.get('/tests/frontend/specs_list.js', function(req, res){
-  tests.specsList(function(tests){
-    res.send("var specs_list = " + JSON.stringify(tests) + ";\n");
-  });
-});
-
-// Used for front-end tests
-app.get('/tests/frontend', function (req, res) {
-  res.redirect('/tests/frontend/');
 });
 
 // Static files IE Javascript and CSS
@@ -103,6 +96,7 @@ io.sockets.on('connection', function (socket) {
       loadError(socket);
       return;
     }
+
     io.in(room).emit('draw:progress', uid, co_ordinates);
     draw.progressExternalPath(room, JSON.parse(co_ordinates), uid);
   });
@@ -114,6 +108,7 @@ io.sockets.on('connection', function (socket) {
       loadError(socket);
       return;
     }
+
     io.in(room).emit('draw:end', uid, co_ordinates);
     draw.endExternalPath(room, JSON.parse(co_ordinates), uid);
   });
@@ -154,13 +149,6 @@ io.sockets.on('connection', function (socket) {
       io.sockets.in(room).emit('item:move', uid, itemNames, delta);
     }
   });
-
-  // User adds a raster image
-  socket.on('image:add', function(room, uid, data, position, name) {
-    draw.addImage(room, uid, data, position, name);
-    io.sockets.in(room).emit('image:add', uid, data, position, name);
-  });
-
 });
 
 // Subscribe a client to a room
@@ -177,6 +165,7 @@ function subscribe(socket, data) {
 
   // Create Paperjs instance for this room if it doesn't exist
   var project = projects.projects[room];
+  
   if (!project) {
     console.log("made room");
     projects.projects[room] = {};
@@ -192,10 +181,10 @@ function subscribe(socket, data) {
     loadFromMemory(room, socket);
   }
 
-  // Broadcast to room the new user count -- currently broken
-  var rooms = socket.adapter.rooms[room]; 
-  var roomUserCount = Object.keys(rooms).length;
-  io.to(room).emit('user:connect', roomUserCount);
+  // // Broadcast to room the new user count -- currently broken
+  // var rooms = socket.adapter.rooms[room]; 
+  // var roomUserCount = Object.keys(rooms).length;
+  // io.to(room).emit('user:connect', roomUserCount);
 }
 
 // Send current project to new client

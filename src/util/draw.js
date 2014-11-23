@@ -63,7 +63,7 @@ exports.endExternalPath = function (room, points, artist) {
   db.storeProject(room);
 };
 
-exports.clearCanvas = function(room) {
+exports.clearCanvas = function (room) {
   var project = projects[room].project;
   if (project && project.activeLayer && project.activeLayer.hasChildren()) {
     // Remove all but the active layer
@@ -85,7 +85,7 @@ exports.clearCanvas = function(room) {
 }
 
 // Remove an item from the canvas
-exports.removeItem = function(room, artist, itemName) {
+exports.removeItem = function (room, artist, itemName) {
   var project = projects[room].project;
   if (project && project.activeLayer && project.activeLayer._namedChildren[itemName] && project.activeLayer._namedChildren[itemName][0]) {
     project.activeLayer._namedChildren[itemName][0].remove();
@@ -94,7 +94,7 @@ exports.removeItem = function(room, artist, itemName) {
 }
 
 // Move one or more existing items on the canvas
-exports.moveItemsProgress = function(room, artist, itemNames, delta) {
+exports.moveItemsProgress = function (room, artist, itemNames, delta) {
   var project = projects[room].project;
   if (project && project.activeLayer) {
     for (x in itemNames) {
@@ -110,7 +110,7 @@ exports.moveItemsProgress = function(room, artist, itemNames, delta) {
 
 // Move one or more existing items on the canvas
 // and write to DB
-exports.moveItemsEnd = function(room, artist, itemNames, delta) {
+exports.moveItemsEnd = function (room, artist, itemNames, delta) {
   var project = projects[room].project;
   if (project && project.activeLayer) {
     for (x in itemNames) {
@@ -125,14 +125,13 @@ exports.moveItemsEnd = function(room, artist, itemNames, delta) {
   }
 }
 
-// Add image to canvas
-exports.addImage = function(room, artist, data, position, name) {
+exports.getDrawing = function (room) {
+  console.log(room, projects);
   var project = projects[room].project;
-  if (project && project.activeLayer) {
-    var image = JSON.parse(data);
-    var raster = new drawing.Raster(image);
-    raster.position = new drawing.Point(position[1], position[2]);
-    raster.name = name;
-    db.storeProject(room);
-  }
+  project.activate();
+
+  return project.exportSVG({
+    asString: true,
+    matchShapes: true
+  });
 }
