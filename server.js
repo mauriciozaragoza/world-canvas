@@ -62,6 +62,11 @@ app.get('/history/*', function(req, res){
   res.sendfile(__dirname + '/src/static/html/history.html');
 });
 
+// Map
+app.get('/top/*', function(req, res){
+  res.sendfile(__dirname + '/src/static/html/top.html');
+});
+
 // Front-end tests
 app.get('/tests/frontend/specs_list.js', function(req, res){
   tests.specsList(function(tests){
