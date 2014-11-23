@@ -53,7 +53,7 @@ app.get('/d/*', function(req, res){
 });
 
 // Get image
-app.get('/dimage/:id', function(req, res){
+app.get('/image/:id', function(req, res){
   res.send(draw.getDrawing(req.params.id));
 });
 
@@ -65,6 +65,11 @@ app.get('/map/*', function(req, res){
 // Map
 app.get('/history/*', function(req, res){
   res.sendfile(__dirname + '/src/static/html/history.html');
+});
+
+// Map
+app.get('/top/*', function(req, res){
+  res.sendfile(__dirname + '/src/static/html/top.html');
 });
 
 // Static files IE Javascript and CSS

@@ -18,6 +18,30 @@ body {
     font-family: Helvetica, Arial, sans-serif
 }
 
+a:hover {
+    text-decoration: none;
+}
+
+.thumbnail:hover .caption {
+    color: #888;
+}
+
+.icon-like {
+    float: right; 
+    padding: 5px; 
+    color:rgb(182,49,46);
+}
+
+.icon-like:hover {
+    color: rgb(223,73,55);
+}
+
+.thumbnail:hover {
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
 .toolbar {
     background: #f7f7f7;
     background: -webkit-linear-gradient(#f7f7f7, #f1f1f1 80%);
