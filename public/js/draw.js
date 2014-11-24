@@ -170,7 +170,7 @@ function onMouseDown(event) {
     if(mouseTimer > 5){
       mouseTimer = 0;
       $('#mycolorpicker').toggle(); // show the color picker
-      $('#mycolorpicker').css({"left":event.event.pageX - 250, "top":event.event.pageY - 100}); // make it in the smae position
+      $('#mycolorpicker').css({"left":event.event.pageX, "top":event.event.pageY}); // make it in the smae position
     }
   }, 100);
   
@@ -410,7 +410,7 @@ function encodeAsImgAndLink(svg){
     svg.setAttribute('version', '1.1');
     var dummy = document.createElement('div');
     dummy.appendChild(svg);
-    window.winsvg = window.open('/static/html/export.html');
+    window.winsvg = window.open('/views/export.html');
     window.winsvg.document.write(dummy.innerHTML);
     window.winsvg.document.body.style.margin = 0;
   } else {
@@ -440,7 +440,7 @@ function exportPNG() {
   var canvas = document.getElementById('myCanvas');
   var html = "<img src='" + canvas.toDataURL('image/png') + "' />"
   if ($.browser.msie) {
-    window.winpng = window.open('/static/html/export.html');
+    window.winpng = window.open('/views/export.html');
     window.winpng.document.write(html);
     window.winpng.document.body.style.margin = 0;
   } else {
@@ -496,8 +496,6 @@ socket.on('project:load', function (json) {
   paper.project.activeLayer.remove();
   paper.project.importJSON(json.project);
 
-  // Make color selector draggable
-  $('#mycolorpicker').pep({});
   // Make sure the range event doesn't propogate to pep
   $('#opacityRangeVal').on('touchstart MSPointerDown mousedown', function(ev){
     ev.stopPropagation(); 
@@ -506,7 +504,7 @@ socket.on('project:load', function (json) {
   })
 
   view.draw();
-  $.get("../static/img/wheel.png");
+  $.get("/img/wheel.png");
 });
 
 socket.on('project:load:error', function() {

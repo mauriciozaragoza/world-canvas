@@ -159,8 +159,8 @@ a:hover {
 #mycolorpicker {
 
     position: absolute;
-    left: 250px;
-    top: 30px;
+    left: 0px;
+    top: 37px;
     z-index: 101;
     display: none;
     border-radius: 6px;
@@ -253,31 +253,34 @@ a:hover {
 .buttonicon {
     width: 16px;
     height: 16px;
-    background-image: url('../../static/img/etherpad_lite_icons.png');
+    background-image: url('/img/etherpad_lite_icons.png');
     background-repeat: no-repeat;
     display: inline-block;
     vertical-align: middle;
 }
 .buttonicon-draw {
-    background-image: url('../../static/img/brush.png');
+    background-image: url('/img/brush.png');
 }
 .buttonicon-pencil {
-    background-image: url('../../static/img/pencil.png');
+    background-image: url('/img/pencil.png');
 }
 .buttonicon-select {
-    background-image: url('../../static/img/select.png');
+    background-image: url('/img/select.png');
 }
 .buttonicon-upload {
-    background-image: url('../../static/img/upload.png');
+    background-image: url('/img/upload.png');
+}
+.buttonicon-color {
+    background-image: url('/img/marker.png');
 }
 .buttonicon-settings {
-    background-position: 0px -436px
+    background-position: 0px -436px;
 }
 .buttonicon-import_export {
-    background-position: 0px -68px
+    background-position: 0px -68px;
 }
 .buttonicon-embed {
-    background-position: 0px -18px
+    background-position: 0px -18px;
 }
 .buttonicon-showusers {
     background-position: 0px -183px;

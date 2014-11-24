@@ -1,0 +1,94 @@
+extends layout
+
+block content
+    div(id="editbar", class="toolbar")
+        div(id="overlay")
+            div(id="overlay-inner")
+        ul(class="menu_left")
+            <!-- paint brush -->
+            li(class="acl-write", id="drawTool", data-key="draw")
+                a(class="grouped-left", data-l10n-id="draw.toolbar.draw.title")
+                    span(class="buttonicon buttonicon-draw")
+            <!-- pencil brush -->
+            li(class="acl-write", id="pencilTool", data-key="pencil")
+                a(class="grouped-middle", data-l10n-id="draw.toolbar.pencil.title")
+                    span(class="buttonicon buttonicon-pencil")
+            <!-- Select Tool -->
+            li(class="acl-write", id="selectTool", data-key="select")
+                a(class="grouped-middle", data-l10n-id="draw.toolbar.select.title")
+                    span(class="buttonicon buttonicon-select")
+            li(class="acl-write", id="usericon", data-key="showusers")
+                a(class="grouped-right", data-l10n-id="draw.toolbar.showusers.title")
+                    span(class="buttonicon buttonicon-color")
+
+        ul(class="menu_right")
+            <!-- settings -->
+            li(data-key="settings")
+                a(id="settingslink", class="grouped-left", data-l10n-id="draw.toolbar.settings.title")
+                    span(class="grouped-left buttonicon buttonicon-settings")
+            <!-- share & embed -->
+            li(data-key="embed")
+                a(id="embedlink", class="grouped-right", data-l10n-id="draw.toolbar.embed.title")
+                    span(class="buttonicon buttonicon-embed")
+            <!-- user stuff -->
+            li(class="separator")
+            
+   
+    div(id="settings", class="popup")
+        h1(data-l10n-id="draw.settings.padSettings")
+        div(class="column")
+            h2(data-l10n-id="draw.settings.ClearCanvas") Clear Canvas
+            a Warning - This will clear the canvas
+                button(id="clearCanvas") Okay, Clear it!
+
+    div(id="embed", class="popup")
+        h1(data-l10n-id="draw.share") Share and Embed
+        div(id="linkcode")
+            h2(data-l10n-id="draw.share.link") Share
+            input(id="linkinput", type="text", value="")
+        br
+        div(id="embedcode")
+            h2(data-l10n-id="draw.share.emebdcode") Embed
+            input(id="embedinput", type="text", value="")
+
+    div(id="settings", class="popup")
+        h1(data-l10n-id="draw.settings.padSettings") Settings
+        div(class="column")
+            h2(data-l10n-id="draw.settings.myView")
+    
+    div(id="importexport", class="popup")
+        h1(data-l10n-id="draw.importExport.import_export") Export
+        div(class="column")
+            h2(data-l10n-id="draw.importExport.export")
+            div
+                a(id="exportSVG", target="_blank", class="exportlink") Export SVG
+            div
+                a(id="exportPNG", target="_blank", class="exportlink") Export PNG
+
+    div(id="lostConnection", class="hidden")
+        P Lost connection to the server! Please refresh this page.
+    div(id="loading", class="hidden", style="display:block;")
+        P Loading existing sketch...  Click and hold to access the colour wheel
+
+    input(type="file", id="imageInput", accept="image/*")
+    div(id="activeColorSwatch")
+    div(id="canvasContainer")
+        canvas(id="myCanvas", resize="true")
+        div(id="mycolorpicker")
+            div(id="colorpicker")
+            div(id="opacity")
+                div(id="opacityLabel") Opacity
+                input(type="range", min="0", max="255", value="200", id="opacityRangeVal")
+    
+    script(src="/js/lib/jquery.js")
+    script(src="/js/lib/bootstrap.min.js")
+    script(src='/socket.io/socket.io.js')
+    script(src='/js/lib/jquery_browser.js')
+    script(src='/js/lib/jquery.mousewheel.min.js')
+    script(src='/js/lib/paper.js')
+    script(src='/js/lib/webtoolkit.base64.js')
+    script(src='/js/lib/farbtastic.js')
+    script(src='/js/lib/jquery.pep.min.js')
+    script(src='/js/draw.js', type="text/paperscript", canvas="myCanvas")
+    script.
+        document.domain = document.domain

@@ -1,0 +1,38 @@
+extends layout
+
+block content
+    .container
+        div(class="row")
+            div(class="col-md-12", style="text-align:center;")
+                h2 Top rated draws
+
+    br
+    .container
+        .row
+            each item in result
+                div(class="col-sm-6 col-md-3")
+                    .thumbnail
+                        a(href="/like/id/", class="icon-like")
+                            li(class="fa fa-heart")   Like
+                        a(class="fancybox" rel="gallery1", href="http://placehold.it/385x200&text=" + item.image, alt= item.name + " draw", title= item.name + " draw")
+                            img(src="http://placehold.it/385x200&text=" + item.image, alt="Country Image")
+                            div(class="caption")
+                                h3= item.name
+                                p!= "Likes: " + item.likes
+            
+    script(src="/js/lib/jquery.js")
+    script(src="/js/lib/bootstrap.js")
+    script(type="text/javascript", src="/util/fancybox/source/jquery.fancybox.js?v=2.1.5")
+    link(rel="stylesheet", type="text/css", href="/util/fancybox/source/jquery.fancybox.css?v=2.1.5", media="screen")
+    link(rel="stylesheet", type="text/css", href="/util/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.5")
+    script(type="text/javascript", src="/util/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.5")
+    link(rel="stylesheet", type="text/css", href="/util/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7")
+    script(type="text/javascript", src="/util/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7")
+    script(type="text/javascript", src="/util/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.6")
+    script.
+        $(document).ready(function() {
+            $(".fancybox").fancybox({
+                openEffect : 'none',
+                closeEffect : 'none'
+            });
+        });
