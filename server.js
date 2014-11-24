@@ -65,7 +65,9 @@ app.get('/image/:id.svg', function(req, res){
 // top ranked
 app.get('/top/:count', function(req, res){
 	db.getTopRanked(parseInt(req.params.count), function (data) {
-		res.send(data);
+		res.send({
+			result: data
+		});
 	});
 });
 

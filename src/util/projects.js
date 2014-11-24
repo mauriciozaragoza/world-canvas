@@ -47,7 +47,7 @@ schedule.scheduleJob(newCanvasJob, function () {
 
     for (var i = 0; i < countries.length; i++) {
     	db.archiveProject(countries[i], function (data) {
-    		exports.projects.projects[data.name].project = new paper.Project();
+    		exports.projects[data.name].project = new paper.Project();
     	});
 	}
 });
