@@ -14,8 +14,8 @@ block content
                     .thumbnail
                         a(href="/like/id/", class="icon-like")
                             li(class="fa fa-heart")   Like
-                        a(class="fancybox" rel="gallery1", href="http://placehold.it/385x200&text=" + item.image, alt= item.name + " draw", title= item.name + " draw from " + item.date)
-                            img(src="http://placehold.it/385x200&text=" + item.image, alt="Country Image")
+                        a(class="fancybox" rel="gallery1", href="http://placehold.it/385x200&text=" + item.name, alt= item.name + " draw", title= item.name + " draw from " + item.date)
+                            img(src="http://placehold.it/385x200&text=" + item.name, alt="Country Image")
                             div(class="caption")
                                 h3= item.name
                                 p!= "Likes: " + item.rating
