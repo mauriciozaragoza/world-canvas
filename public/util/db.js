@@ -1,50 +1,114 @@
 var settings = require('./Settings.js'),
-    projects = require('./projects.js'),
-     ueberDB = require('ueberDB')
+	projects = require('./projects.js');
 
-// Database connection
-var db = new ueberDB.database(settings.dbType, settings.dbSettings);
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/worldcanvas');
 
-// Write to teh database
-exports.storeProject = function(room) {
-  var project = projects.projects[room].project;
-  var json = project.exportJSON();
-  db.init(function (err) {
-    if(err) {
-      console.error(err);
-    }
-    console.log("Writing project to database");
-    db.set(room, {project: json});
-  });
+var db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function callback () {
+	console.log("Loaded DB");
+});
+
+var roomSchema = mongoose.Schema({
+	name: String,
+	project: mongoose.Schema.Types.Mixed
+});
+
+var Room = mongoose.model('Room', roomSchema);
+
+var archiveSchema = mongoose.Schema({
+	name: String,
+	svg: String,
+	rating: Number,
+	date: Date
+});
+
+var Archive = mongoose.model('Archive', archiveSchema);
+
+exports.storeProject = function (room) {
+	console.log("Saving room " + room);
+	
+	Room.update({ name : room }, 
+		{ 
+			$set: {
+				project: projects.projects[room].project.exportJSON()
+			}
+		}, 
+		{ upsert: true }, 
+		function (err) {
+			if (err) {
+				console.error("could not save room");
+				console.error(err);
+			}
+			
+			console.log("room saved");
+		});
 }
 
-// Try to load room from database
-exports.load = function(room, socket) {
-  console.log("load from db");
-  if (projects.projects[room] && projects.projects[room].project) {
-    var project = projects.projects[room].project;
-    db.init(function (err) {
-      if(err) {
-        console.error(err);
-      }
-      console.log("Initting db");
-      db.get(room, function(err, value) {
-//        if (value && project && project instanceof drawing.Project && project.activeLayer) {
-        if (value && project && project.activeLayer) {
-          socket.emit('loading:start');
-          // Clear default layer as importing JSON adds a new layer.
-          // We want the project to always only have one layer.
-          project.activeLayer.remove();
-          project.importJSON(value.project);
-          socket.emit('project:load', value);
-        }
-        socket.emit('loading:end');
-        db.close(function(){});
-      });
-      socket.emit('loading:end'); // used for sending back a blank database in case we try to load from DB but no project exists
-    });
-  } else {
-    loadError(socket);
-  }
+exports.load = function (room, onLoaded) {
+	Room.findOne({ name: room }, function (err, value) {
+		console.log("loading single room " + room);
+
+		if (err) {
+			console.error("could not load single room");
+			console.error(err);
+		}
+
+		var project = projects.projects[room].project;
+
+		if (value && project && project.activeLayer) {
+			project.activeLayer.remove();
+			project.importJSON(value.project);
+		}
+		
+		if (onLoaded) {
+			onLoaded(project);
+		}
+	});
 }
 
+exports.archiveProject = function (room, onFinished) {
+	var archiveData = new Archive({
+		name : room,
+		svg : projects.projects[room].project.exportSVG({
+			asString: true,
+			matchShapes: true
+		}),
+		rating : 0,
+		date : new Date()
+	});
+
+	archiveData.save(function (err, value) {
+		if (onFinished) {
+			onFinished(value);
+		}
+
+		exports.storeProject(room);
+	});
+}
+
+exports.getDrawing = function (id, onLoaded) {
+	Archive.findOne({ _id: id }, function (err, value) {
+		if (err) {
+			console.error(err);
+		}
+		else {
+			if (value) {
+				onLoaded(value.svg);
+			}
+		}
+	});
+}
+
+exports.getTopRanked = function (count, onLoaded) {
+	Archive
+		.find()
+		.select("-svg")
+		.sort('+rating')
+		.limit(count).
+		exec(function (err, value) {
+			onLoaded(value);
+		});
+}

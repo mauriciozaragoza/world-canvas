@@ -229,7 +229,7 @@ a:hover {
     display: none;
     background-repeat: repeat-both;
     width: 100%;
-    position: absolute;
+    /*position: absolute;*/
     height: inherit;
     left: 0;
     top: 0;
@@ -484,7 +484,7 @@ input[type=checkbox] {
 }
 
 #myCanvas{
-    position:absolute;
+    /*position:absolute;*/
     cursor:hand;
     top:37px;
     left:0px;
@@ -521,7 +521,7 @@ input[type=checkbox] {
 }
 
 div.tooltipMap {   
-    position: absolute;           
+    /*position: absolute; */
     text-align: center;           
     width: auto;                  
     height: auto;
