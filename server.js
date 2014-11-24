@@ -3,7 +3,6 @@
  */
 
 var settings = require('./src/util/Settings.js'),
-    tests = require('./src/util/tests.js'),
     draw = require('./src/util/draw.js'),
     projects = require('./src/util/projects.js'),
     db = require('./src/util/db.js'),
@@ -67,6 +66,10 @@ app.get('/image/:id.svg', function(req, res){
 
 app.get('/top/:count', function(req, res) {
 	db.getTopRanked(parseInt(req.params.count), function (data) {
+		data = { 
+			result: data
+		};
+
 		res.render('top.jade', data);
 
 		/*{
