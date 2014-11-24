@@ -212,9 +212,6 @@ function onMouseDown(event) {
   }
 }
 
-var item_move_delta;
-var send_item_move_timer;
-var item_move_timer_is_active = false;
 
 function onMouseDrag(event) {
   mouseTimer = 0;
@@ -262,39 +259,7 @@ function onMouseDrag(event) {
     }
 
     timer_is_active = true;
-  } else if (activeTool == "select") {
-    // Move item locally
-    for (x in paper.project.selectedItems) {
-      var item = paper.project.selectedItems[x];
-      item.position += event.delta;
-    }
-
-    // Store delta
-    if (paper.project.selectedItems) {
-      if (!item_move_delta) {
-        item_move_delta = event.delta;
-      } else {
-        item_move_delta += event.delta;
-      }
-    }
-
-    // Send move updates every 50 ms
-    if (!item_move_timer_is_active) {
-      send_item_move_timer = setInterval(function() {
-        if (item_move_delta) {
-          var itemNames = new Array();
-          for (x in paper.project.selectedItems) {
-            var item = paper.project.selectedItems[x];
-            itemNames.push(item._name);
-          }
-          socket.emit('item:move:progress', room, uid, itemNames, item_move_delta);
-          item_move_delta = null;
-        }
-      }, timers.move);
-    }
-    item_move_timer_is_active = true;
   }
-
 }
 
 
@@ -324,77 +289,8 @@ function onMouseUp(event) {
     clearInterval(send_paths_timer);
     path_to_send.path = new Array();
     timer_is_active = false;
-  } else if (activeTool == "select") {
-    // End movement timer
-    clearInterval(send_item_move_timer);
-    if (item_move_delta) {
-      // Send any remaining movement info
-      var itemNames = new Array();
-      for (x in paper.project.selectedItems) {
-        var item = paper.project.selectedItems[x];
-        itemNames.push(item._name);
-      }
-      socket.emit('item:move:end', room, uid, itemNames, item_move_delta);
-    } else {
-      // delta is null, so send 0 change
-      socket.emit('item:move:end', room, uid, itemNames, new Point(0, 0));
-    }
-    item_move_delta = null;
-    item_move_timer_is_active = false;
-  }
-
+  } 
 }
-
-var key_move_delta;
-var send_key_move_timer;
-var key_move_timer_is_active = false;
-function onKeyDown(event) {
-  if (activeTool == "select") {
-    var point = null;
-
-    if (event.key == "up") {
-      point = new paper.Point(0, -1);
-    } else if (event.key == "down") {
-      point = new paper.Point(0, 1);
-    } else if (event.key == "left") {
-      point = new paper.Point(-1, 0);
-    } else if (event.key == "right") {
-      point = new paper.Point(1, 0);
-    }
-
-	// Move objects 1 pixel with arrow keys
-    if (point) {
-      moveItemsBy1Pixel(point);
-    }
-
-    // Store delta
-    if (paper.project.selectedItems && point) {
-      if (!key_move_delta) {
-        key_move_delta = point;
-      } else {
-        key_move_delta += point;
-      }
-    }
-	
-    // Send move updates every 100 ms as batch updates
-    if (!key_move_timer_is_active && point) {
-      send_key_move_timer = setInterval(function() {
-        if (key_move_delta) {
-          var itemNames = new Array();
-          for (x in paper.project.selectedItems) {
-            var item = paper.project.selectedItems[x];
-            itemNames.push(item._name);
-          }
-          socket.emit('item:move:progress', room, uid, itemNames, key_move_delta);
-          key_move_delta = null;
-        }
-      }, timers.move);
-    }
-    key_move_timer_is_active = true;
-  }
-}
-
-
 
 function onKeyUp(event) {
   if (event.key == "delete") {
@@ -409,46 +305,6 @@ function onKeyUp(event) {
       }
     }
   }
-
-  if (activeTool == "select") {
-    // End arrow key movement timer
-    clearInterval(send_key_move_timer);
-    if (key_move_delta) {
-      // Send any remaining movement info
-      var itemNames = new Array();
-      for (x in paper.project.selectedItems) {
-        var item = paper.project.selectedItems[x];
-        itemNames.push(item._name);
-      }
-      socket.emit('item:move:end', room, uid, itemNames, key_move_delta);
-    } else {
-      // delta is null, so send 0 change
-      socket.emit('item:move:end', room, uid, itemNames, new Point(0, 0));
-    }
-    key_move_delta = null;
-    key_move_timer_is_active = false;
-  }
-}
-
-function moveItemsBy1Pixel(point) {
-  if (!point) {
-    return;
-  }
-
-  if (paper.project.selectedItems.length < 1) {
-    return;
-  }
-
-  // Move locally
-  var itemNames = new Array();
-  for (x in paper.project.selectedItems) {
-    var item = paper.project.selectedItems[x];
-    item.position += point;
-    itemNames.push(item._name);
-  }
-
-  // Redraw screen for item position update
-  view.draw();
 }
 
 // Drop image onto canvas to upload it
@@ -604,26 +460,6 @@ $('#imageInput').bind('change', function(e) {
   }
 });
 
-// function uploadImage(file) {
-//   var reader = new FileReader();
-
-//   //attach event handler
-//   reader.readAsDataURL(file);
-//   $(reader).bind('loadend', function(e) {
-//     var bin = this.result; 
-
-//     //Add to paper project here
-//     var raster = new Raster(bin);
-//     raster.position = view.center;
-//     raster.name = uid + ":" + (++paper_object_count);
-//     socket.emit('image:add', room, uid, JSON.stringify(bin), raster.position, raster.name);
-//   });
-// }
-
-
-
-
-
 // --------------------------------- 
 // SOCKET.IO EVENTS
 
@@ -697,29 +533,6 @@ socket.on('item:remove', function(artist, name) {
     view.draw();
   }
 });
-
-socket.on('item:move', function(artist, itemNames, delta) {
-  if (artist != uid) {
-    for (x in itemNames) {
-      var itemName = itemNames[x];
-      if (paper.project.activeLayer._namedChildren[itemName][0]) {
-        paper.project.activeLayer._namedChildren[itemName][0].position += new Point(delta[1], delta[2]);
-      }
-    }
-    view.draw();
-  }
-});
-
-// socket.on('image:add', function(artist, data, position, name) {
-//   if (artist != uid) {
-//     var image = JSON.parse(data);
-//     var raster = new Raster(image);
-//     raster.position = new Point(position[1], position[2]);
-//     raster.name = name;
-//     view.draw();
-//   }
-// });
-
 
 // --------------------------------- 
 // SOCKET.IO EVENT FUNCTIONS
