@@ -20,15 +20,4 @@
     "user" : "",
     "password" : ""
   }
-                 
-  /* An Example of MySQL Configuration
-  "dbType" : "mysql",
-  "dbSettings" : {
-    "user"    : "root", 
-    "host"    : "localhost", 
-    "password": "", 
-    "database": "store"
-  }
-  */
-
 }

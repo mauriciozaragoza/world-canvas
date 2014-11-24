@@ -1,0 +1,28 @@
+doctype html
+html
+	head
+		title World Canvas : Draw
+		link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css')
+		link(rel='stylesheet', href='/css/bootstrap.css')
+		link(rel='stylesheet', href='/css/style.css')
+
+	body
+		nav(class="navbar navbar-inverse", role="navigation", style="margin-bottom:0px;")
+			.container
+				.navbar-header
+					button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1")
+						span(class="sr-only") Toggle navigation
+						span(class="icon-bar")
+						span(class="icon-bar")
+						span(class="icon-bar")
+					a(class="navbar-brand", href="/", rel="home" title="World Canvas : Draw")
+						img(alt="Logo" src="/img/pencilnav.png", style="max-width:100px; margin-top: -7px;")
+						div(style="float:right; margin-left:10px;") World Canvas
+				div(class="collapse navbar-collapse", id="bs-example-navbar-collapse-1")
+					ul(class="nav navbar-nav")
+						li
+							a(href="/map/") Zones
+						li
+							a(href="/top/") Top rated
+
+		block content
