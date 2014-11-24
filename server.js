@@ -48,17 +48,24 @@ app.get('/', function(req, res){
 });
 
 // Drawings
-app.get('/d/*', function(req, res){
+app.get('/draw/*', function(req, res){
   res.sendfile(__dirname + '/src/static/html/draw.html');
 });
 
 // Get image
-app.get('/image/:id', function(req, res){
+app.get('/image/:id.svg', function(req, res){
   draw.getDrawing(req.params.id, function (project) {
-    res.send(project.exportSVG({
+    var svg = project.exportSVG({
       asString: true,
       matchShapes: true
-    }));
+    });
+
+    // console.log(svg);
+
+    // svg.width = 10000;
+    // svg.height = 10000;
+
+    res.send(svg);
   });
 });
 
@@ -91,10 +98,8 @@ io.sockets.setMaxListeners(0);
 
 // SOCKET IO
 io.sockets.on('connection', function (socket) {
-  // console.log(socket.request.connection.remoteAddress);
   socket.on('disconnect', function () {
     console.log("Socket disconnected");
-    // TODO: We should have logic here to remove a drawing from memory as we did previously
   });
 
   // EVENT: User stops drawing something
@@ -143,70 +148,20 @@ io.sockets.on('connection', function (socket) {
     draw.removeItem(room, uid, itemName);
     io.sockets.in(room).emit('item:remove', uid, itemName);
   });
-
-  // User moves one or more items on their canvas - progress
-  socket.on('item:move:progress', function(room, uid, itemNames, delta) {
-    draw.moveItemsProgress(room, uid, itemNames, delta);
-    if (itemNames) {
-      io.sockets.in(room).emit('item:move', uid, itemNames, delta);
-    }
-  });
-
-  // User moves one or more items on their canvas - end
-  socket.on('item:move:end', function(room, uid, itemNames, delta) {
-    draw.moveItemsEnd(room, uid, itemNames, delta);
-    if (itemNames) {
-      io.sockets.in(room).emit('item:move', uid, itemNames, delta);
-    }
-  });
 });
 
 // Subscribe a client to a room
 function subscribe(socket, data) {
   var room = data.room;
 
-  // Subscribe the client to the room
   socket.join(room);
 
-  // If the close timer is set, cancel it
-  // if (closeTimer[room]) {
-  //  clearTimeout(closeTimer[room]);
-  // }
-
-  // Create Paperjs instance for this room if it doesn't exist
-  var project = projects.projects[room];
-  
-  if (!project) {
-    console.log("made room");
-    projects.projects[room] = {};
-    // Use the view from the default project. This project is the default
-    // one created when paper is instantiated. Nothing is ever written to
-    // this project as each room has its own project. We share the View
-    // object but that just helps it "draw" stuff to the invisible server
-    // canvas.
-    projects.projects[room].project = new paper.Project();
-    projects.projects[room].external_paths = {};
-    db.load(room, socket);
-  } else { // Project exists in memory, no need to load from database
-    loadFromMemory(room, socket);
-  }
-
-  // // Broadcast to room the new user count -- currently broken
-  // var rooms = socket.adapter.rooms[room]; 
-  // var roomUserCount = Object.keys(rooms).length;
-  // io.to(room).emit('user:connect', roomUserCount);
-}
-
-// Send current project to new client
-function loadFromMemory(room, socket) {
   var project = projects.projects[room].project;
-  if (!project) { // Additional backup check, just in case
-    db.load(room, socket);
-    return;
-  }
+
   socket.emit('loading:start');
   var value = project.exportJSON();
-  socket.emit('project:load', {project: value});
+  console.log("Client entered to room " + room);
+  socket.emit('project:load', { project: value });
   socket.emit('loading:end');
 }
 
