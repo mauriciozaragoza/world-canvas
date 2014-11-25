@@ -3,7 +3,7 @@ tool.maxDistance = 45;
 
 var scaleFactor = 1.1,
   maxZoom = 25,
-  minZoom = 0.2,
+  minZoom = 0.5,
   boundary = new Rectangle(0, 0, 10000, 10000);
 
 timers = {

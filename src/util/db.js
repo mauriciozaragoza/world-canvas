@@ -112,3 +112,15 @@ exports.getTopRanked = function (count, onLoaded) {
 			onLoaded(value);
 		});
 }
+
+exports.getHistory = function (count, countryCode, onLoaded) {
+	Archive
+		.find({"name" : name})
+		.select("-svg")
+		.sort('+date')
+		.limit(count)
+		exec(function (err, value) {
+			onLoaded(value);
+		});
+}
+
