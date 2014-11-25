@@ -83,17 +83,21 @@ app.get('/top/:count', function(req, res) {
 });
 
 // History
-app.get('/history/:id', function(req, res){
-    var id = req.params.id;
-    res.render('history.jade', 
-    {
-        "result": [
-            {"name":id, "likes":"12", "date":"12 Aug 2014", "image":"/img/something4.png"},
-            {"name":id, "likes":"11", "date":"12 Jul 2014", "image":"/img/something3.png"},
-            {"name":id, "likes":"15", "date":"12 Jun 2014", "image":"/img/something2.png"},
-            {"name":id, "likes":"13", "date":"12 May 2014", "image":"/img/something1.png"}
-        ]
-    });
+app.get('/history/:name/:count', function(req, res){
+    db.getHistory(req.params.count, req.params.name, function (data) {
+    	console.log(data);
+
+    	res.render('history.jade', 
+	    {
+	    	"result" : data
+	        // "result": [
+	        //     {"name":id, "likes":"12", "date":"12 Aug 2014", "image":"/img/something4.png"},
+	        //     {"name":id, "likes":"11", "date":"12 Jul 2014", "image":"/img/something3.png"},
+	        //     {"name":id, "likes":"15", "date":"12 Jun 2014", "image":"/img/something2.png"},
+	        //     {"name":id, "likes":"13", "date":"12 May 2014", "image":"/img/something1.png"}
+	        // ]
+	    });
+    })
 });
 
 /**

@@ -107,19 +107,22 @@ exports.getTopRanked = function (count, onLoaded) {
 		.find()
 		.select("-svg")
 		.sort('+rating')
-		.limit(count).
-		exec(function (err, value) {
+		.limit(count)
+		.exec(function (err, value) {
 			onLoaded(value);
 		});
 }
 
 exports.getHistory = function (count, countryCode, onLoaded) {
-	// Archive
-	// 	.find({"name" : name})
-	// 	.select("-svg")
-	// 	.sort('+date')
-	// 	.limit(count)
-	// 	exec(function (err, value) {
-	// 		onLoaded(value);
-	// 	});
+	var hash = projects.countries[projects.countryCodes.indexOf(countryCode)];
+	console.log(hash);
+	
+	Archive
+		.find({"name" : hash})
+		.select("-svg")
+		.sort('+date')
+		.limit(count)
+		.exec(function (err, value) {
+			onLoaded(value);
+		});
 }
