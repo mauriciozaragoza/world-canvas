@@ -36,7 +36,7 @@ var ratingSchema = mongoose.Schema({
 var Rating = mongoose.model('Rating', ratingSchema);
 
 exports.storeProject = function (room) {
-	console.log("Saving room " + room);
+	// console.log("Saving room " + room);
 	
 	Room.update({ name : room }, 
 		{ 
@@ -55,7 +55,7 @@ exports.storeProject = function (room) {
 
 exports.load = function (room, onLoaded) {
 	Room.findOne({ name: room }, function (err, value) {
-		console.log("loading single room " + room);
+		// console.log("loading single room " + room);
 
 		if (err) {
 			console.error("could not load single room");
@@ -113,7 +113,7 @@ exports.getTopRanked = function (count, onLoaded) {
 	Archive
 		.find()
 		.select("-svg")
-		.sort('+rating')
+		.sort({'rating' : -1})
 		.limit(count)
 		.exec(function (err, value) {
 			onLoaded(value);
@@ -127,7 +127,7 @@ exports.getHistory = function (count, countryCode, onLoaded) {
 	Archive
 		.find({"name" : hash})
 		.select("-svg")
-		.sort('+date')
+		.sort({'date' : -1})
 		.limit(count)
 		.exec(function (err, value) {
 			onLoaded(value);

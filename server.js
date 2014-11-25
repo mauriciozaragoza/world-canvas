@@ -11,7 +11,9 @@ var settings = require('./src/util/Settings.js'),
     paper = require('paper'),
     socket = require('socket.io'),
     async = require('async'),
-    fs = require('fs');
+    fs = require('fs'),
+    jsdom = require('jsdom'),
+    d3 = require('d3');
 
 var port = settings.port;
 
@@ -56,11 +58,26 @@ app.get('/map/', function(req, res) {
 
 // Image
 app.get('/image/:id.svg', function(req, res) {
-	db.getDrawing(req.params.id, function (svg) {
-		// svg.width = 10000;
-		// svg.height = 10000;
+	var width = 320,
+		height = 240;
 
-		res.send(svg);
+	db.getDrawing(req.params.id, function (svg) {
+		jsdom.env({ 
+			features : { QuerySelector : true }, 
+			html : svg,
+			done : function (err, window) {
+				var el = window.document.querySelector('svg');
+
+				d3.select(el)
+					.attr("width", width)
+					.attr("height", height)
+					.select("g")
+					.attr("transform", "scale(" + (Math.min(width, height) / 10000) + ")");
+
+				res.send(window.document.documentElement.innerHTML);
+			}
+		});
+		
 	});
 });
 

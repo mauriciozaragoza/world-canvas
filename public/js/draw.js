@@ -221,16 +221,13 @@ function onMouseDrag(event) {
   mouseTimer = 0;
   clearInterval(mouseHeld);
 
-  if (event.event.button == 1) {
+  if (event.event.button == 1 || event.event.button == 2) {
     view.center -= event.delta;
 
     if (!boundary.contains(view.center)) {
       view.center += event.delta;
     }
 
-    return;
-  } else if (event.event.button == 2) {
-    // right button
     return;
   }
 
