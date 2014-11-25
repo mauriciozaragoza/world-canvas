@@ -115,7 +115,7 @@ app.get('/currentimage/:room.svg', function(req, res) {
 });
 
 app.get('/top/', function(req, res) {
-	db.getTopRanked(16, function (data) {
+	db.getTopRanked(12, function (data) {
 		res.render('top.jade', {"result": data});
 		// console.log(data);
 	});
@@ -123,7 +123,7 @@ app.get('/top/', function(req, res) {
 
 // History
 app.get('/history/:name', function(req, res) {
-    db.getHistory(16, req.params.name, function (data) {
+    db.getHistory(12, req.params.name, function (data) {
     	res.render('history.jade', {"result" : data});
     })
 });

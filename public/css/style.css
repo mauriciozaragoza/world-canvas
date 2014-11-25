@@ -15,7 +15,7 @@ html {
     width: 100%;
 }
 body {
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: 'GillSan', sans-serif !important;
     overflow:hidden;
 }
 
@@ -536,6 +536,7 @@ div .tooltipMap {
     border-radius: 15px;           
     pointer-events: none;       
     z-index: 1000;  
+    visibility: hidden;
 }
 
 #map {

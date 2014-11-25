@@ -17,6 +17,13 @@ block content
                 -var y = date.getFullYear();
                 -return d+' '+m+' '+y;
             -}
+            -function cutName(name){
+                -var n = name.split(" ");
+                -if(n.length > 1)
+                    -return n[0] + " " + n[1];
+                -else
+                    -return n[0]
+            -}
             each item in result
                 div(class="col-sm-6 col-md-3")
                     .thumbnail
@@ -26,7 +33,7 @@ block content
                         a(class="fancybox", type="iframe" rel="gallery1", href="/image/" + item._id + ".svg", alt= item.country + " draw", title= item.country + " draw from #{prettyDate(item.date)}")
                             img(src="/image/" + item._id + ".svg", alt="Country Image")
                             div(class="caption")
-                                h3= item.country
+                                h3 #{cutName(item.country)}
                                 p Likes: 
                                     span(id=item._id)= item.rating
             

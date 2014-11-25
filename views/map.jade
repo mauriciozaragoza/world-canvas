@@ -25,11 +25,9 @@ block content
 					button(type="button", class="btn btn-default", data-dismiss="modal") Close
 					
 					span(id="countryLink")
-					
-					a(href="/like/id/", style="margin-left:10px;")
-						button(type="button", class="btn btn-primary")
-							li(class="fa fa-heart")   Like
 
+	script(language="javascript", type="application/javascript", src="http://www.geoplugin.net/javascript.gp?.js")
+	script(src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js")
 	script(src="http://d3js.org/d3.v3.min.js")
 	script(src="http://d3js.org/queue.v1.min.js")
 	script(src="/js/topojson.js")
@@ -69,9 +67,8 @@ block content
 
 			$('#modal').modal('show');
 			$('#countryName').text(d.name);
-
-			var image = '<img src="http://placehold.it/400x400&text=' + d.name + '">';
-			var link = '<a href="/history/' + d.code2 + '/" style="margin-left:10px;"><button type="button" class="btn btn-default"> History</button></a>';
+			var image = '<img src="/currentimage/' + CryptoJS.MD5(d.code2).toString() + '.svg">';
+			var link = '<a href="/history/' + d.code2 + '/" style="margin-left:10px;"><button type="button" class="btn btn-primary"> History</button></a>';
 			$('#countryImage').html(image);
 			$('#countryLink').html(link);
 		}

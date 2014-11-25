@@ -22,8 +22,8 @@ block content
                     .thumbnail
                         a(href="#", class="icon-like", onclick="like('" + item._id + "')")
                             li(class="fa fa-heart")   Like
-                        a(class="fancybox" rel="gallery1", href="http://placehold.it/385x200&text=" + item.image, alt= item.country + " draw", title= item.country + " draw from #{prettyDate(item.date)}")
-                            img(src="http://placehold.it/385x200&text=" + item.image, alt="Country Image")
+                        a(class="fancybox", type="iframe" rel="gallery1", href="/image/" + item._id + ".svg", alt= item.country + " draw", title= item.country + " draw from #{prettyDate(item.date)}")
+                            img(src="/image/" + item._id + ".svg", alt="Country Image")
                             div(class="caption")
                                 h3 #{prettyDate(item.date)}
                                 p Likes: 
@@ -42,7 +42,10 @@ block content
         $(document).ready(function() {
             $(".fancybox").fancybox({
                 openEffect : 'none',
-                closeEffect : 'none'
+                closeEffect : 'none',
+                iframe : {
+                    preload: false
+                }
             });
         });
 
