@@ -109,6 +109,16 @@ exports.getDrawing = function (id, onLoaded) {
 	});
 }
 
+
+exports.getCurrentDrawing = function (room, onLoaded) {
+	if (projects.projects[room]) {
+		onLoaded(projects.projects[room].project.exportSVG({
+			asString: true,
+			matchShapes: true
+		}));
+	}
+}
+
 exports.getTopRanked = function (count, onLoaded) {
 	Archive
 		.find()
