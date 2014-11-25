@@ -44,7 +44,7 @@ schedule.scheduleJob(saveJob, function () {
 });
 
 var newCanvasJob = new schedule.RecurrenceRule();
-newCanvasJob.minute = new schedule.Range(0, 59, 2);
+newCanvasJob.hour = new schedule.Range(0, 23, 3);
 
 schedule.scheduleJob(newCanvasJob, function () {
     console.log("Creating new canvas");
