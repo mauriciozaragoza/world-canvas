@@ -42,8 +42,6 @@ exports.storeProject = function (room) {
 				console.error("could not save room");
 				console.error(err);
 			}
-			
-			console.log("room saved");
 		});
 }
 
