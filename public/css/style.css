@@ -15,8 +15,10 @@ html {
     width: 100%;
 }
 body {
-    font-family: Helvetica, Arial, sans-serif
+    font-family: Helvetica, Arial, sans-serif;
+    overflow:hidden;
 }
+
 
 a:hover {
     text-decoration: none;
@@ -58,6 +60,7 @@ a:hover {
     position:absolute;
     left:0px;
     right:0px;
+    z-index: 102;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -485,6 +488,7 @@ input[type=checkbox] {
 
 #myCanvas{
     /*position:absolute;*/
+    background: rgba(0,0,0,0.2);
     cursor:hand;
     top:37px;
     left:0px;
