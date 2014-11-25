@@ -71,7 +71,7 @@ block content
 			$('#countryName').text(d.name);
 
 			var image = '<img src="http://placehold.it/400x400&text=' + d.name + '">';
-			var link = '<a href="/history/' + d.name + '" style="margin-left:10px;"><button type="button" class="btn btn-default"> History</button></a>';
+			var link = '<a href="/history/' + d.code2 + '/" style="margin-left:10px;"><button type="button" class="btn btn-default"> History</button></a>';
 			$('#countryImage').html(image);
 			$('#countryLink').html(link);
 		}
@@ -99,8 +99,10 @@ block content
 				var tryit = names.filter(function(n) { return d.id == n.id; })[0];
 				if (typeof tryit === "undefined"){
 			    	d.name = "Undefined";
+			    	d.code2 = "Undefined";
 				} else {
 			    	d.name = toTitleCase(tryit.name); 
+			    	d.code2 = tryit.code2;
 				}
 			});
 
@@ -111,6 +113,7 @@ block content
 					.insert("path")
 					.attr("class", "country")    
 					.attr("title", function(d,i) { return d.name; })
+					.attr("code2", function(d,i) { return d.code2 })
 					.attr("d", path)
 					.attr("data-reveal-id", "info")
 					.attr("data-animation", "fade")
