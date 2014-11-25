@@ -22,6 +22,7 @@ var archiveSchema = mongoose.Schema({
 	name: String,
 	svg: String,
 	rating: Number,
+	country: String,
 	date: Date
 });
 
@@ -74,7 +75,7 @@ exports.load = function (room, onLoaded) {
 	});
 }
 
-exports.archiveProject = function (room, onFinished) {
+exports.archiveProject = function (room, countryName, onFinished) {
 	var archiveData = new Archive({
 		name : room,
 		svg : projects.projects[room].project.exportSVG({
@@ -82,6 +83,7 @@ exports.archiveProject = function (room, onFinished) {
 			matchShapes: true
 		}),
 		rating : 0,
+		country: countryName,
 		date : new Date()
 	});
 
