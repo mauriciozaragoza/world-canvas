@@ -100,7 +100,7 @@ block content
 				if (typeof tryit === "undefined"){
 			    	d.name = "Undefined";
 				} else {
-			    	d.name = tryit.name; 
+			    	d.name = toTitleCase(tryit.name); 
 				}
 			});
 
@@ -119,9 +119,13 @@ block content
 
 			country
 				.on("mouseover", function(d){
-					tooltip.text(d["name"]);
+					tooltip.text(toTitleCase(d["name"]));
 					return tooltip.style("visibility", "visible");
 				})
 				.on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-120)+"px").style("left",(d3.event.pageX-350)+"px");})
 				.on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+		}
+
+		function toTitleCase(str) {
+			return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 		}
