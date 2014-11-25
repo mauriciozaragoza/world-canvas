@@ -47,6 +47,8 @@ $(document).ready(function() {
   var path = new Path.Rectangle(rect);
   path.fillColor = '#fff';
 
+  $('body').on('contextmenu', '#myCanvas', function(e){ return false; });
+
   // view.center = new Point(5000, 5000);
 
   // $('#myCanvas').bind('DOMMouseScroll', function(ev, delta){

@@ -81,6 +81,31 @@ app.get('/image/:id.svg', function(req, res) {
 	});
 });
 
+// Image
+app.get('/currentimage/:room.svg', function(req, res) {
+	var width = 320,
+		height = 240;
+
+	db.getCurrentDrawing(req.params.room, function (svg) {
+		jsdom.env({ 
+			features : { QuerySelector : true }, 
+			html : svg,
+			done : function (err, window) {
+				var el = window.document.querySelector('svg');
+
+				d3.select(el)
+					.attr("width", width)
+					.attr("height", height)
+					.select("g")
+					.attr("transform", "scale(" + (Math.min(width, height) / 10000) + ")");
+
+				res.send(window.document.documentElement.innerHTML);
+			}
+		});
+		
+	});
+});
+
 app.get('/top/', function(req, res) {
 	db.getTopRanked(16, function (data) {
 		res.render('top.jade', {"result": data});
