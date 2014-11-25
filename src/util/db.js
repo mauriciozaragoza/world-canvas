@@ -113,7 +113,7 @@ exports.getTopRanked = function (count, onLoaded) {
 	Archive
 		.find()
 		.select("-svg")
-		.sort({ 'rating' : -1 })
+		.sort({'rating' : -1})
 		.limit(count)
 		.exec(function (err, value) {
 			onLoaded(value);
@@ -127,7 +127,7 @@ exports.getHistory = function (count, countryCode, onLoaded) {
 	Archive
 		.find({"name" : hash})
 		.select("-svg")
-		.sort('+date')
+		.sort({'date' : -1})
 		.limit(count)
 		.exec(function (err, value) {
 			onLoaded(value);
