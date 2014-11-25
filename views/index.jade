@@ -1,33 +1,9 @@
 doctype html
 html
+	script(language="javascript", type="application/javascript", src="http://www.geoplugin.net/javascript.gp?.js")
+	script(src="/js/lib/jquery.js")
+	script(src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js")
 	script.
-
-		function go2Random() {
-			window.location = "draw/1234567890";
-		}
-
-		function randomPadName() {
-			var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-			var string_length = 10;
-			var randomstring = '';
-			for (var i = 0; i < string_length; i++) {
-				var rnum = Math.floor(Math.random() * chars.length);
-				randomstring += chars.substring(rnum, rnum + 1);
-			}
-			return randomstring;
-		}
-
-		function getParameterByName(name) {
-			name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-			var regexS = "[\\?&]" + name + "=([^&#]*)";
-			var regex = new RegExp(regexS);
-			var results = regex.exec(window.location.search);
-			if(results == null) {
-				return "";
-			}
-			else {
-				return decodeURIComponent(results[1].replace(/\+/g, " "));
-			}
-		}
-		
-		go2Random();
+		$(document).ready(function(){
+			window.location = "draw/" + CryptoJS.MD5(geoplugin_countryCode()).toString();
+		});

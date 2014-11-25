@@ -123,4 +123,3 @@ exports.getHistory = function (count, countryCode, onLoaded) {
 	// 		onLoaded(value);
 	// 	});
 }
-
