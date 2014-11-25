@@ -53,7 +53,8 @@ do
     TIME_SINCE_LAST_SEND=$(($TIME_NOW - $LAST_EMAIL_SEND))
     
     if [ $TIME_SINCE_LAST_SEND -gt $TIME_BETWEEN_EMAILS ]; then
-      printf "Server was restared at: $(date)\nThe last 50 lines of the log before the error happens:\n $(tail -n 50 $1)" | mail -s "Pad Server was restarted" $EMAIL_ADDRESS
+      # printf "Server was restared at: $(date)\nThe last 50 lines of the log before the error happens:\n $(tail -n 50 $1)" | mail -s "Pad Server was restarted" $EMAIL_ADDRESS
+      printf "Server was restared at: $(date)\nThe last 50 lines of the log before the error happens:\n $(tail -n 50 $1)"
       
       LAST_EMAIL_SEND=$TIME_NOW
     fi
