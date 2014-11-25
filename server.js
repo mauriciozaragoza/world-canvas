@@ -74,7 +74,11 @@ app.get('/image/:id.svg', function(req, res) {
 					.select("g")
 					.attr("transform", "scale(" + (Math.min(width, height) / 10000) + ")");
 
-				res.send(window.document.documentElement.innerHTML);
+				res.set({
+					"Content-Type": "image/svg+xml"
+				});
+
+				res.send(window.document.documentElement.querySelector('body').innerHTML);
 			}
 		});
 		
@@ -99,7 +103,11 @@ app.get('/currentimage/:room.svg', function(req, res) {
 					.select("g")
 					.attr("transform", "scale(" + (Math.min(width, height) / 10000) + ")");
 
-				res.send(window.document.documentElement.innerHTML);
+				res.set({
+					"Content-Type": "image/svg+xml"
+				});
+
+				res.send(window.document.documentElement.querySelector('body').innerHTML);
 			}
 		});
 		

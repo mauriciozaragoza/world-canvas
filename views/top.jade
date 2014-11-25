@@ -24,7 +24,7 @@ block content
                             li(class="fa fa-heart")   Like
                         
                         a(class="fancybox", type="iframe" rel="gallery1", href="/image/" + item._id + ".svg", alt= item.country + " draw", title= item.country + " draw from #{prettyDate(item.date)}")
-                            img(src="/image/" + item._id, alt="Country Image")
+                            img(src="/image/" + item._id + ".svg", alt="Country Image")
                             div(class="caption")
                                 h3= item.country
                                 p Likes: 
