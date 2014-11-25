@@ -27,6 +27,13 @@ var archiveSchema = mongoose.Schema({
 
 var Archive = mongoose.model('Archive', archiveSchema);
 
+var ratingSchema = mongoose.Schema({
+	image_id: String,
+	ip: String
+});
+
+var Rating = mongoose.model('Rating', ratingSchema);
+
 exports.storeProject = function (room) {
 	console.log("Saving room " + room);
 	
@@ -123,4 +130,54 @@ exports.getHistory = function (count, countryCode, onLoaded) {
 		.exec(function (err, value) {
 			onLoaded(value);
 		});
+}
+
+exports.addLike = function (image_id, ip, onFinished) {
+	Archive.findOne({ "_id": image_id }, function (err, archive) {
+		if (err) {
+			console.error(err);
+		}
+
+		if (!archive) {
+			// console.log("archive not found");
+			if (onFinished) onFinished(-1);
+		}
+		else {
+			Rating
+				.findOne({ "ip": ip, "image_id" : image_id }, function (err, value) {
+				if (err) {
+					console.error(err);
+				}
+
+				if (value) {
+					// console.log("rating found, ignoring");
+					if (onFinished) onFinished(archive.rating);
+				}
+				else {
+					// console.log("rating not found");
+					var r = new Rating({
+						"image_id" : image_id,
+						"ip" : ip
+					});
+
+					r.save(function (err, value) {
+						if (err) {
+							console.error(err);
+						}
+
+						// console.log("updating ", { "_id": mongoose.Types.ObjectId(image_id) });
+
+						archive.update({ $inc: { rating : 1 } }, function (err) {
+							if (err) {
+								console.error(err);
+							}
+
+							if (onFinished) onFinished(archive.rating + 1);
+							// console.log("rating saved: ", archive.rating + 1);
+						});
+					});
+				}
+			});
+		}
+	});
 }

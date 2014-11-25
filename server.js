@@ -39,23 +39,23 @@ app.configure('production', function(){
  */
 
 // Index page
-app.get('/', function(req, res){
+app.get('/', function(req, res) {
     res.render('index.jade', {});
 });
 
 // Drawings
-app.get('/draw/:id', function(req, res){
+app.get('/draw/:id', function(req, res) {
     var id = req.params.id;
     res.render('draw.jade', {});
 });
 
 // Map
-app.get('/map/', function(req, res){
+app.get('/map/', function(req, res) {
     res.render('map.jade', {});
 });
 
 // Image
-app.get('/image/:id.svg', function(req, res){
+app.get('/image/:id.svg', function(req, res) {
 	db.getDrawing(req.params.id, function (svg) {
 		// svg.width = 10000;
 		// svg.height = 10000;
@@ -83,21 +83,24 @@ app.get('/top/:count', function(req, res) {
 });
 
 // History
-app.get('/history/:name/:count', function(req, res){
-    db.getHistory(req.params.count, req.params.name, function (data) {
+app.get('/history/:name', function(req, res) {
+    db.getHistory(16, req.params.name, function (data) {
     	console.log(data);
 
     	res.render('history.jade', 
 	    {
 	    	"result" : data
-	        // "result": [
-	        //     {"name":id, "likes":"12", "date":"12 Aug 2014", "image":"/img/something4.png"},
-	        //     {"name":id, "likes":"11", "date":"12 Jul 2014", "image":"/img/something3.png"},
-	        //     {"name":id, "likes":"15", "date":"12 Jun 2014", "image":"/img/something2.png"},
-	        //     {"name":id, "likes":"13", "date":"12 May 2014", "image":"/img/something1.png"}
-	        // ]
 	    });
     })
+});
+
+// Like
+app.get('/like/:id', function(req, res) {
+    db.addLike(req.params.id, 
+		req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+		function (rating) {
+			return res.json(rating);
+		});
 });
 
 /**
