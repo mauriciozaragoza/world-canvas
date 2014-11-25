@@ -9,15 +9,23 @@ block content
     br
     .container
         .row
+            -function prettyDate(dateString){
+                -var date = new Date(dateString);
+                -var d = date.getDate();
+                -var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+                -var m = monthNames[date.getMonth()];
+                -var y = date.getFullYear();
+                -return d+' '+m+' '+y;
+            -}
             each item in result
                 div(class="col-sm-6 col-md-3")
                     .thumbnail
                         a(href="#", class="icon-like", onclick="like('" + item._id + "')")
                             li(class="fa fa-heart")   Like
-                        a(class="fancybox" rel="gallery1", href="http://placehold.it/385x200&text=" + item.name, alt= item.name + " draw", title= item.name + " draw from " + item.date)
-                            img(src="http://placehold.it/385x200&text=" + item.name, alt="Country Image")
+                        a(class="fancybox" rel="gallery1", href="http://placehold.it/385x200&text=" + item.country, alt= item.country + " draw", title= item.country + " draw from " + item.date)
+                            img(src="http://placehold.it/385x200&text=" + item.country, alt="Country Image")
                             div(class="caption")
-                                h3= item.name
+                                h3= item.country
                                 p Likes: 
                                     span(id=item._id)= item.rating
             

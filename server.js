@@ -67,6 +67,7 @@ app.get('/image/:id.svg', function(req, res) {
 app.get('/top/', function(req, res) {
 	db.getTopRanked(16, function (data) {
 		res.render('top.jade', {"result": data});
+		console.log(data);
 	});
 });
 

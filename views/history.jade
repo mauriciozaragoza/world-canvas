@@ -4,7 +4,7 @@ block content
     .container
         div(class="row")
             div(class="col-md-12", style="text-align:center;")
-                h2!= result[0].name + " History"
+                h2!= result[0].country + " History"
 
     br
     .container
@@ -20,13 +20,14 @@ block content
             each item in result
                 div(class="col-sm-6 col-md-3")
                     .thumbnail
-                        a(href="/like/id/", class="icon-like")
+                        a(href="#", class="icon-like", onclick="like('" + item._id + "')")
                             li(class="fa fa-heart")   Like
-                        a(class="fancybox" rel="gallery1", href="http://placehold.it/385x200&text=" + item.image, alt= item.name + " draw", title= item.name + " draw from " + item.date)
+                        a(class="fancybox" rel="gallery1", href="http://placehold.it/385x200&text=" + item.image, alt= item.country + " draw", title= item.country + " draw from " + item.date)
                             img(src="http://placehold.it/385x200&text=" + item.image, alt="Country Image")
                             div(class="caption")
                                 h3 #{prettyDate(item.date)}
-                                p!= "Likes: " + item.rating
+                                p Likes: 
+                                    span(id=item._id)= item.rating
             
     script(src="/js/lib/jquery.js")
     script(src="/js/lib/bootstrap.js")
@@ -44,3 +45,10 @@ block content
                 closeEffect : 'none'
             });
         });
+
+        function like(_id) {
+            console.log(_id);
+            $.get("/like/" + _id, function (data) { 
+                $("#" + _id).text(data); 
+            });
+        }
