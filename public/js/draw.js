@@ -3,7 +3,8 @@ tool.maxDistance = 45;
 
 var scaleFactor = 1.1,
   maxZoom = 25,
-  minZoom = 0.05;
+  minZoom = 0.5,
+  boundary = new Rectangle(0, 0, 10000, 10000);
 
 timers = {
   move: 500,
@@ -30,6 +31,7 @@ function hexToRgb(hex) {
 
 $(document).ready(function() {
   var drawurl = window.location.href.split("?")[0]; // get the drawing url
+
   $('#embedinput').val("<iframe name='embed_readwrite' src='" + drawurl + "?showControls=true&showChat=true&showLineNumbers=true&useMonospaceFont=false' width=600 height=400></iframe>"); // write it to the embed input
   $('#linkinput').val(drawurl); // and the share/link input
   $('#drawTool > a').css({background:"#eee"}); // set the drawtool css to show it as active
@@ -37,6 +39,15 @@ $(document).ready(function() {
   $('#myCanvas').on('mousewheel', function(ev){
     scrolled(ev.pageX, ev.pageY, ev.deltaY * ev.deltaFactor);
   });
+
+  console.log("colorpicker");
+  $('#colorpicker').farbtastic(pickColor); // make a color picker
+
+  var rect = new Rectangle(0, 0, 10000, 10000);
+  var path = new Path.Rectangle(rect);
+  path.fillColor = '#fff';
+
+  // view.center = new Point(5000, 5000);
 
   // $('#myCanvas').bind('DOMMouseScroll', function(ev, delta){
   //   scrolled(ev.pageX, ev.pageY, ev.detail);
@@ -175,6 +186,10 @@ function onMouseDown(event) {
   }, 100);
   
   if (activeTool == "draw" || activeTool == "pencil") {
+    if (!boundary.contains(event.middlePoint)) {
+      return;
+    }
+
     var point = event.point;
     path = new Path();
     if(activeTool == "draw"){
@@ -219,6 +234,11 @@ function onMouseDrag(event) {
 
   if (event.event.button == 1) {
     view.center -= event.delta;
+
+    if (!boundary.contains(view.center)) {
+      view.center += event.delta;
+    }
+
     return;
   } else if (event.event.button == 2) {
     // right button
@@ -230,6 +250,10 @@ function onMouseDrag(event) {
   step.angle += 90;
 
   if (activeTool == "draw" || activeTool == "pencil") {
+    if (!boundary.contains(event.middlePoint)) {
+      return;
+    }
+
     if(activeTool == "draw"){
       var top = event.middlePoint + step;
       var bottom = event.middlePoint - step;
@@ -264,7 +288,6 @@ function onMouseDrag(event) {
 
 
 function onMouseUp(event) {
-
   // Ignore middle or right mouse button clicks for now
   if (event.event.button == 1 || event.event.button == 2) {
     return;
@@ -273,7 +296,10 @@ function onMouseUp(event) {
 
   if (activeTool == "draw" || activeTool == "pencil") {
     // Close the users path
-    path.add(event.point);
+    if (boundary.contains(event.point)) {
+      path.add(event.point);
+    }
+
     path.closed = true;
     path.smooth();
     view.draw();
@@ -493,7 +519,7 @@ socket.on('user:disconnect', function (user_count) {
 
 socket.on('project:load', function (json) {
   console.log("project:load");
-  paper.project.activeLayer.remove();
+  // paper.project.activeLayer.remove();
   paper.project.importJSON(json.project);
 
   // Make sure the range event doesn't propogate to pep
@@ -516,13 +542,13 @@ socket.on('canvas:clear', function() {
 });
 
 socket.on('loading:start', function() {
-  // console.log("loading:start");
+  console.log("loading:start");
   $('#loading').show();
 });
 
 socket.on('loading:end', function() {
+  console.log("loading:end");
   $('#loading').hide();
-  $('#colorpicker').farbtastic(pickColor); // make a color picker
 });
 
 socket.on('item:remove', function(artist, name) {
