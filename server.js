@@ -64,33 +64,16 @@ app.get('/image/:id.svg', function(req, res) {
 	});
 });
 
-app.get('/top/:count', function(req, res) {
-	db.getTopRanked(parseInt(req.params.count), function (data) {
-		data = {result: data};
-		
-		res.render('top.jade', data);
-
-		/*{
-	        "result": [
-	            {"name":"USA", "likes":"15", "date":"12 May 2014", "image":"/img/something1.png"},
-	            {"name":"Mexico", "likes":"13", "date":"12 Jun 2014", "image":"/img/something2.png"},
-	            {"name":"Canada", "likes":"11", "date":"12 Jul 2014", "image":"/img/something3.png"},
-	            {"name":"Spain", "likes":"9", "date":"12 Jul 2014", "image":"/img/something4.png"}
-	        ]
-	    }*/
-
+app.get('/top/', function(req, res) {
+	db.getTopRanked(16, function (data) {
+		res.render('top.jade', {"result": data});
 	});
 });
 
 // History
 app.get('/history/:name', function(req, res) {
     db.getHistory(16, req.params.name, function (data) {
-    	console.log(data);
-
-    	res.render('history.jade', 
-	    {
-	    	"result" : data
-	    });
+    	res.render('history.jade', {"result" : data});
     })
 });
 
